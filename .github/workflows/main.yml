@@ -28,4 +28,8 @@ jobs:
         method: 'GET'
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
-
+    - name: Print Result
+      run: |
+        # show result
+        echo ${{ steps.lastUpdated.outputs.response }}
+        echo ${{ steps.lastUpdated.outputs.headers }}
