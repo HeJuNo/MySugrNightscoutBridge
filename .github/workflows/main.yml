@@ -39,7 +39,7 @@ jobs:
 
     - name: Show Result
       env: 
-        LAST-MODIFIED: ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
+        LASTMODIFIED: ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
       run: |
-        echo LAST-MODIEFIED = $LAST-MODIFIED
+        echo LASTMODIEFIED = $LASTMODIFIED
 
