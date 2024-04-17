@@ -18,7 +18,7 @@ jobs:
     permissions: write-all
     
     steps:
-    - name: get-mysugr-token
+    - name: Get MySugr Token
       id: mysugr-token
       uses: fjogeleit/http-request-action@v1
       with:
@@ -27,7 +27,7 @@ jobs:
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
 
-    - name: get-mysugr-entries
+    - name: Get MySugr Entries
       id: mysugr-entries
       uses: fjogeleit/http-request-action@v1
       with:
@@ -38,7 +38,7 @@ jobs:
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
 
-    - name: Transform Result
+    - name: Transform MySugr Entries
       uses: cloudposse/github-action-jq@main
       id: mysugr-entries-to-nightscout
       with:
@@ -46,7 +46,16 @@ jobs:
         input: '${{ steps.mysugr-entries.outputs.response }}'
         script: |-
           [ .logEntry[] | del(.verifications[] | select(.logEntryAttribute != "bloodGlucoseMeasurement")) | {date: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
-          
+    
+    - name: Upload Entries to Nightscout
+      uses: cloudposse/github-action-jq@main
+      id: upload-entries-to-nightscout
+      with:
+        url: 'https://${{ secrets.NIGHTSCOUT_HOST }}/api/v1/treatments?token=${{ secrets.NIGHTSCOUT_TOKEN }}'
+        method: 'POST'
+        contentType: "application/json"
+        data: ${{ steps.mysugr-entries-to-nightscout.outputs.output }}
+
     - name: Update Last Modified Variable
       id: mysugr-last-updated
       uses: fjogeleit/http-request-action@v1
