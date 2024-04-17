@@ -1,5 +1,5 @@
-name: Get MySugr Data
-run-name: Get MySugr Data (${{ github.ref_name }})
+name: get-data
+#run-name: Get MySugr Data (${{ github.ref_name }})
 on:
   workflow_dispatch:
   #schedule: 
@@ -10,13 +10,14 @@ on:
     #- cron: '*/10 * * * *' 
 
 jobs:
-  deployment:
+  get-mysugr-data:
     runs-on: ubuntu-latest
-    outputs:
-      MYSUGR_ENTRIES: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).logEntry)}}
-      MYSUGR_ENTRIES_LASTMODIFIED: ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
+#    outputs:
+#      MYSUGR_TOKEN: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.token)}}
+#      MYSUGR_USERID: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.userId)}}
+
     steps:
-    - name: Get MySugr Token
+    - name: get-mysugr-token
       id: mysugr-token
       uses: fjogeleit/http-request-action@v1
       with:
@@ -24,8 +25,8 @@ jobs:
         method: 'GET'
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
-    
-    - name: Get MySugr Entries
+
+    - name: get-mysugr-entries
       id: mysugr-entries
       uses: fjogeleit/http-request-action@v1
       with:
@@ -35,7 +36,10 @@ jobs:
         username: 'x'
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
-        
+
     - name: Show Result
+      env: 
+        LAST-MODIFIED: ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
       run: |
-        echo ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
+        echo LAST-MODIEFIED = $LAST-MODIFIED
+
