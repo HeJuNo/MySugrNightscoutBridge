@@ -2,23 +2,20 @@ name: 1. Get MySugr Access Token
 run-name: Get MySugr Access Token (${{ github.ref_name }})
 on:
   workflow_dispatch:
-  schedule: 
+  #schedule: 
     ## Schedule the job to run every 1st of month 00:00 UTC daily.
     #- cron: '0 0 1 * *'
     
     ## Schedule the job to run every 10th minute.
-    - cron: '*/10 * * * *' 
+    #- cron: '*/10 * * * *' 
 
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    # env:
-      # MYSUGR_USER: ${{ secrets.MYSUGR_USER }}
-      # MYSUGR_PASS: ${{ secrets.MYSUGR_PASS }}
     outputs:
       MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
       MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
-
+      MYSUGR_ENTRIES: ${{ fromJson(steps.mysugr-entries.outputs.response).logEntry }}
     steps:
     - name: Get MySugr Token
       id: mysugr-token
@@ -28,8 +25,15 @@ jobs:
         method: 'GET'
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
-    - name: Print Result
-      run: |
-        # show result
-        echo "::debug::${{ steps.mysugr-token.outputs.response }}"
-        echo "::debug::${{ steps.mysugr-token.outputs.headers }}"
+    
+    - name: Get MySugr Token
+      id: mysugr-entries
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'https://eu-prod-api.mysugr.com/rest/v2/logentries'
+        method: 'GET'
+        contentType: "application/json"
+        username: 'x'
+        password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
+        customHeaders: '{"If-Modified-Since:": "${{ vars.LASTMODIFIED }}"}'
+   
