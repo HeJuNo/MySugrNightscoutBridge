@@ -26,7 +26,7 @@ jobs:
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
     
-    - name: Get MySugr Token
+    - name: Get MySugr Entries
       id: mysugr-entries
       uses: fjogeleit/http-request-action@v1
       with:
@@ -35,5 +35,5 @@ jobs:
         contentType: "application/json"
         username: 'x'
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
-        customHeaders: '{"If-Modified-Since:": "${{ vars.LASTMODIFIED }}"}'
+        customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
    
