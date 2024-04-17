@@ -12,10 +12,10 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    outputs:
-      MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
-      MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
-      MYSUGR_ENTRIES: ${{ fromJson(steps.mysugr-entries.outputs.response)}}
+#    outputs:
+#      MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
+#      MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
+#      MYSUGR_ENTRIES: ${{ fromJson(steps.mysugr-entries.outputs.response)}}
     steps:
     - name: Get MySugr Token
       id: mysugr-token
