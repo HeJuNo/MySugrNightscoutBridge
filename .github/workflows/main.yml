@@ -31,5 +31,5 @@ jobs:
     - name: Print Result
       run: |
         # show result
-        echo ${{ steps.mysugr-token.outputs.response }}
-        echo ${{ steps.mysugr-token.outputs.headers }}
+        echo "::debug::${{ steps.mysugr-token.outputs.response }}"
+        echo "::debug::${{ steps.mysugr-token.outputs.headers }}"
