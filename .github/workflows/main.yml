@@ -13,9 +13,8 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     outputs:
-#      MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
-#      MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
       MYSUGR_ENTRIES: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).logEntry)}}
+      MYSUGR_ENTRIES_LASTMODIFIED: ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
     steps:
     - name: Get MySugr Token
       id: mysugr-token
@@ -36,4 +35,7 @@ jobs:
         username: 'x'
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
-   
+        
+    - name: Show Result
+      run: |
+        echo ${{ steps.mysugr-entries.headers.last-modified }}
