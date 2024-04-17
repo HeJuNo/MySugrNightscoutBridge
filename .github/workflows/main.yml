@@ -12,9 +12,9 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    env:
-      MYSUGR_USER: ${{ secrets.MYSUGR_USER }}
-      MYSUGR_PASS: ${{ secrets.MYSUGR_PASS }}
+    # env:
+      # MYSUGR_USER: ${{ secrets.MYSUGR_USER }}
+      # MYSUGR_PASS: ${{ secrets.MYSUGR_PASS }}
     outputs:
       MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
       MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
@@ -31,5 +31,5 @@ jobs:
     - name: Print Result
       run: |
         # show result
-        echo ${{ steps.lastUpdated.outputs.response }}
-        echo ${{ steps.lastUpdated.outputs.headers }}
+        echo ${{ steps.mysugr-token.outputs.response }}
+        echo ${{ steps.mysugr-token.outputs.headers }}
