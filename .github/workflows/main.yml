@@ -43,9 +43,9 @@ jobs:
       env: 
         VARIABLE_NAME: ${{ secrets.API_VARIABLE_NAME }}
       with:
-        url: 'https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/variables/$VARIABLE_NAME'
+        url: 'https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/variables/${{env.VARIABLE_NAME}}'
         method: 'PATCH'
         bearerToken: '${{ secrets.GITHUB_TOKEN }}'
         customHeaders: '{"Accept:": "application/vnd.github+json"}'
-        data: '{"name":"$VARIABLE_NAME","value":"${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}"}'
+        data: '{"name":"${{env.VARIABLE_NAME}}","value":"${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}"}'
 
