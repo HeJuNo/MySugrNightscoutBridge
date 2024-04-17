@@ -1,17 +1,19 @@
 jobs:
   deployment:
     runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+      GH_TOKEN: ${{ secrets.GH_PAT }}
     steps:
     - name: Get MySugr Token
-      id: mysugrToken
+      id: mysugr-token
       uses: fjogeleit/http-request-action@v1
       with:
         url: 'https://eu-prod-api.mysugr.com/rest/v2/users/me/auth/tokens/new'
         method: 'GET'
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
-    - name: Show Response
-        run: |
-          echo ${{ steps.lastUpdated.outputs.response }}
-          echo ${{ steps.lastUpdated.outputs.headers }}
-          echo ${{ fromJson(steps.lastUpdated.outputs.response).userAuthenticationToken.token }}
+      outputs:
+        MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
+        MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
+
