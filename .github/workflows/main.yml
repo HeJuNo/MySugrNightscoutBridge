@@ -37,9 +37,13 @@ jobs:
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
 
-    - name: Show Result
-      env: 
-        LASTMODIFIED: ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
-      run: |
-        echo LASTMODIEFIED = $LASTMODIFIED
+    - name: Update Last Modified Variable
+      id: mysugr-last-updated
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/variables/${{ secrets.API_VARIABLE_NAME }}'
+        method: 'PATCH'
+        bearerToken: '${{ secrets.GITHUB_TOKEN }}'
+        customHeaders: '{"Accept:": "application/vnd.github+json"}'
+        data: '{"name":"${{ secrets.API_VARIABLE_NAME }}","value":"${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}"}'
 
