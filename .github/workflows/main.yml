@@ -38,6 +38,15 @@ jobs:
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
 
+    - name: Transform Result
+      uses: cloudposse/github-action-jq@main
+      id: mysugr-entries-to-nightscout
+      with:
+        compact: true
+        input: '${{ steps.mysugr-entries.outputs.response }}'
+        script: |-
+          [ .logEntry[] | del(.verifications[] | select(.logEntryAttribute != "bloodGlucoseMeasurement")) | {date: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
+          
     - name: Update Last Modified Variable
       id: mysugr-last-updated
       uses: fjogeleit/http-request-action@v1
@@ -47,4 +56,3 @@ jobs:
         bearerToken: '${{ secrets.API_SECRET }}'
         customHeaders: '{"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}'
         data: '{"name":"${{secrets.API_VARIABLE_NAME}}","value":${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}}'
-
