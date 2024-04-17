@@ -38,4 +38,4 @@ jobs:
         
     - name: Show Result
       run: |
-        echo ${{ steps.mysugr-entries.headers.last-modified }}
+        echo ${{ fromJson(steps.mysugr-entries.outputs.headers).last-modified}}
