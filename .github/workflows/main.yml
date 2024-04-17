@@ -46,6 +46,6 @@ jobs:
         url: 'https://api.github.com/repos/${{github.repository}}/actions/variables/${{env.VARIABLE_NAME}}'
         method: 'PATCH'
         bearerToken: '${{ secrets.GITHUB_TOKEN }}'
-        customHeaders: '{"Accept:": "application/vnd.github+json"}'
+        customHeaders: '{"Accept": "application/vnd.github+json"}'
         data: '{"name":"${{env.VARIABLE_NAME}}","value":"${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}"}'
 
