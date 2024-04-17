@@ -41,9 +41,9 @@ jobs:
       id: mysugr-last-updated
       uses: fjogeleit/http-request-action@v1
       env: 
-        VARIABLE_NAME: ${{ secrets.API_VARIABLE_NAME }}
+        VARIABLE_NAME: 'LASTMODIFIED' # ${{ secrets.API_VARIABLE_NAME }}
       with:
-        url: 'https://api.github.com/repos/${{github.repository_owner}}/${{github.repository}}/actions/variables/${{env.VARIABLE_NAME}}'
+        url: 'https://api.github.com/repos/${{github.repository}}/actions/variables/${{env.VARIABLE_NAME}}'
         method: 'PATCH'
         bearerToken: '${{ secrets.GITHUB_TOKEN }}'
         customHeaders: '{"Accept:": "application/vnd.github+json"}'
