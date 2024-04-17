@@ -7,7 +7,7 @@ on:
     #- cron: '0 0 1 * *'
     
     ## Schedule the job to run every 10th minute.
-    #- cron: '*/10 * * * *' 
+    - cron: '*/10 * * * *' 
 
 jobs:
   deployment:
