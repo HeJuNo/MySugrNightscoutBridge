@@ -46,5 +46,5 @@ jobs:
         method: 'PATCH'
         bearerToken: '${{ secrets.API_SECRET }}'
         customHeaders: '{"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}'
-        data: '{"name":"${{secrets.API_VARIABLE_NAME}}","value":"${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}"}'
+        data: '{"name":"${{secrets.API_VARIABLE_NAME}}","value":"${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified }}"}'
 
