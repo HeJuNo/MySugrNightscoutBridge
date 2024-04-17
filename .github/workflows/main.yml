@@ -1,5 +1,5 @@
-name: 1. Get MySugr Access Token
-run-name: Get MySugr Access Token (${{ github.ref_name }})
+name: Get MySugr Data
+run-name: Get MySugr Data (${{ github.ref_name }})
 on:
   workflow_dispatch:
   #schedule: 
@@ -15,7 +15,7 @@ jobs:
     outputs:
       MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
       MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
-      MYSUGR_ENTRIES: ${{ fromJson(steps.mysugr-entries.outputs.response).logEntry }}
+      MYSUGR_ENTRIES: ${{ fromJson(steps.mysugr-entries.outputs.response)}}
     steps:
     - name: Get MySugr Token
       id: mysugr-token
