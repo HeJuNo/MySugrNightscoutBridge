@@ -13,8 +13,12 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     env:
-      GH_PAT: ${{ secrets.GH_PAT }}
-      GH_TOKEN: ${{ secrets.GH_PAT }}
+      MYSUGR_USER: ${{ secrets.MYSUGR_USER }}
+      MYSUGR_PASS: ${{ secrets.MYSUGR_PASS }}
+    outputs:
+      MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
+      MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
+
     steps:
     - name: Get MySugr Token
       id: mysugr-token
@@ -24,7 +28,4 @@ jobs:
         method: 'GET'
         username: '${{ secrets.MYSUGR_USER }}'
         password: '${{ secrets.MYSUGR_PASS }}'
-      outputs:
-        MYSUGR_TOKEN: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}
-        MYSUGR_USERID: ${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.userId }}
 
