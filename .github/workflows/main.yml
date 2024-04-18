@@ -1,21 +1,14 @@
-name: get-data
+name: MySugr-to-Nightscout
 #run-name: Get MySugr Data (${{ github.ref_name }})
 on:
   workflow_dispatch:
-  #schedule: 
-    ## Schedule the job to run every 1st of month 00:00 UTC daily.
-    #- cron: '0 0 1 * *'
-    
+  #schedule:     
     ## Schedule the job to run every 10th minute.
-    #- cron: '*/10 * * * *' 
+    #- cron: '*/5 * * * *' 
 
 jobs:
   get-mysugr-data:
     runs-on: ubuntu-latest
-#    outputs:
-#      MYSUGR_TOKEN: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.token)}}
-#      MYSUGR_USERID: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.userId)}}
-    permissions: write-all
     
     steps:
     - name: Get MySugr Token
@@ -45,7 +38,7 @@ jobs:
         compact: true
         input: '${{ steps.mysugr-entries.outputs.response }}'
         script: |-
-          [ .logEntry[] | del(.verifications[] | select(.logEntryAttribute != "bloodGlucoseMeasurement")) | {date: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
+          [ .logEntry[] | del(.verifications[] | select(.logEntryAttribute != "bloodGlucoseMeasurement")) | {created_at: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
     
     - name: Upload Entries to Nightscout
       id: upload-entries-to-nightscout
