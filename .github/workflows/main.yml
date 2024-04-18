@@ -2,15 +2,24 @@ name: MySugr-to-Nightscout
 #run-name: Get MySugr Data (${{ github.ref_name }})
 on:
   workflow_dispatch:
-  #schedule:     
+  schedule:     
     ## Schedule the job to run every 10th minute.
-    #- cron: '*/5 * * * *' 
+    - cron: '*/5 * * * *' 
 
 jobs:
   get-mysugr-data:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Delete workflow runs
+      id: delete-workflow-runs
+      uses: MajorScruffy/delete-old-workflow-runs@v0.2.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.API_SECRET }}
+      with:
+          repository: ${{github.repository}}
+          older-than-seconds: 1800
+
     - name: Get MySugr Token
       id: mysugr-token
       uses: fjogeleit/http-request-action@v1
