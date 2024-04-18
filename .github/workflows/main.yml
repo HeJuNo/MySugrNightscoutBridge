@@ -12,10 +12,6 @@ on:
 jobs:
   get-mysugr-data:
     runs-on: ubuntu-latest
-#    outputs:
-#      MYSUGR_TOKEN: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.token)}}
-#      MYSUGR_USERID: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.userId)}}
-    permissions: write-all
     
     steps:
     - name: Get MySugr Token
