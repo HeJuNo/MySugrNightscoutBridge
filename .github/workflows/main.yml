@@ -12,6 +12,10 @@ on:
 jobs:
   get-mysugr-data:
     runs-on: ubuntu-latest
+#    outputs:
+#      MYSUGR_TOKEN: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.token)}}
+#      MYSUGR_USERID: ${{ toJSON(fromJson(steps.mysugr-entries.outputs.response).userAuthenticationToken.userId)}}
+    permissions: write-all
     
     steps:
     - name: Get MySugr Token
@@ -44,8 +48,8 @@ jobs:
           [ .logEntry[] | del(.verifications[] | select(.logEntryAttribute != "bloodGlucoseMeasurement")) | {date: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
     
     - name: Upload Entries to Nightscout
-      uses: cloudposse/github-action-jq@main
       id: upload-entries-to-nightscout
+      uses: fjogeleit/http-request-action@v1
       with:
         url: 'https://${{ secrets.NIGHTSCOUT_HOST }}/api/v1/treatments?token=${{ secrets.NIGHTSCOUT_TOKEN }}'
         method: 'POST'
