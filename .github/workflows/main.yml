@@ -18,7 +18,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.API_SECRET }}
       with:
           repository: ${{github.repository}}
-          older-than-seconds: 1800
+          older-than-seconds: 21600
 
     - name: Get MySugr Token
       id: mysugr-token
