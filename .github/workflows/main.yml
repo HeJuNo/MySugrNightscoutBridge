@@ -47,7 +47,7 @@ jobs:
         compact: true
         input: '${{ steps.mysugr-entries.outputs.response }}'
         script: |-
-          .logEntry | del(.[] | select( has("verifications") | not )) | del(.[] | select(.verifications[].logEntryAttribute != "bloodGlucoseMeasurement")) | .[] | [ {created_at: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)}]
+          [ .logEntry | del(.[] | select( has("verifications") | not )) | del(.[] | select(.verifications[].logEntryAttribute != "bloodGlucoseMeasurement")) | .[] | {created_at: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
     
     - name: Upload Entries to Nightscout
       id: upload-entries-to-nightscout
