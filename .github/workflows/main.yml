@@ -34,19 +34,26 @@ jobs:
       uses: fjogeleit/http-request-action@v1
       with:
         url: 'https://eu-prod-api.mysugr.com/rest/v2/logentries'
+        retry: 3
+        retryWait: 5000
         method: 'GET'
         contentType: "application/json"
         username: 'x'
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
-        responseFile: data/entries.json
+
+    - uses: DamianReeves/write-file-action@master
+      with:
+        path: ${{ env.home}}/entries.json
+        contents: ${{ steps.mysugr-entries.outputs.response }}
+        write-mode: overwrite
 
     - name: Transform MySugr Entries
       uses: cloudposse/github-action-jq@main
       id: mysugr-entries-to-nightscout
       with:
         compact: true
-        input: data/entries.json 
+        input: ${{ env.home}}/entries.json 
         script: |-
           [ .logEntry | del(.[] | select( has("verifications") | not )) | del(.[] | select(.verifications[].logEntryAttribute != "bloodGlucoseMeasurement")) | .[] | {created_at: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
     
