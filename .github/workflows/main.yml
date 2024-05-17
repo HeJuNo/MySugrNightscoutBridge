@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: Get MySugr Token
       id: mysugr-token
-      uses: fjogeleit/http-request-action@v1
+      uses: luetgendorf/http-request-action@v1
       with:
         url: 'https://eu-prod-api.mysugr.com/rest/v2/users/me/auth/tokens/new'
         method: 'GET'
@@ -22,7 +22,7 @@ jobs:
 
     - name: Get MySugr Entries
       id: mysugr-entries
-      uses: fjogeleit/http-request-action@v1
+      uses: luetgendorf/http-request-action@v1
       with:
         url: 'https://eu-prod-api.mysugr.com/rest/v2/logentries'
         retry: 3
@@ -45,7 +45,7 @@ jobs:
     
     - name: Upload Entries to Nightscout
       id: upload-entries-to-nightscout
-      uses: fjogeleit/http-request-action@v1
+      uses: luetgendorf/http-request-action@v1
       with:
         url: 'https://${{ secrets.NIGHTSCOUT_HOST }}/api/v1/treatments?token=${{ secrets.NIGHTSCOUT_TOKEN }}'
         method: 'POST'
@@ -54,7 +54,7 @@ jobs:
 
     - name: Update Last Modified Variable
       id: mysugr-last-updated
-      uses: fjogeleit/http-request-action@v1
+      uses: luetgendorf/http-request-action@v1
       with:
         url: 'https://api.github.com/repos/${{github.repository}}/actions/variables/${{secrets.API_VARIABLE_NAME}}'
         method: 'PATCH'
