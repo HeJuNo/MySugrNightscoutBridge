@@ -28,6 +28,7 @@ jobs:
         retry: 3
         retryWait: 5000
         timeout: 30000
+        preventFailureOnNoResponse: true
         method: 'GET'
         contentType: "application/json"
         username: 'x'
