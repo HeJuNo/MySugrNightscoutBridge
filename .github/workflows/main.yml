@@ -41,12 +41,7 @@ jobs:
         username: 'x'
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
-
-    - uses: DamianReeves/write-file-action@master
-      with:
-        path: ${{ env.home}}/entries.json
-        contents: ${{ steps.mysugr-entries.outputs.response }}
-        write-mode: overwrite
+        responseFile: ${{ env.home}}/entries.json
 
     - name: Transform MySugr Entries
       uses: cloudposse/github-action-jq@main
