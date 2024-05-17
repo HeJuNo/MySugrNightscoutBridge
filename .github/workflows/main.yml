@@ -32,14 +32,14 @@ jobs:
         username: 'x'
         password: '${{ fromJson(steps.mysugr-token.outputs.response).userAuthenticationToken.token }}'
         customHeaders: '{"If-Modified-Since": "${{ vars.LASTMODIFIED }}"}'
-        responseFile: ${{ env.home}}/entries.json
+        responseFile: entries.json
 
     - name: Transform MySugr Entries
       uses: cloudposse/github-action-jq@main
       id: mysugr-entries-to-nightscout
       with:
         compact: true
-        input: ${{ env.home}}/entries.json 
+        input: entries.json 
         script: |-
           [ .logEntry | del(.[] | select( has("verifications") | not )) | del(.[] | select(.verifications[].logEntryAttribute != "bloodGlucoseMeasurement")) | .[] | {created_at: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
     
