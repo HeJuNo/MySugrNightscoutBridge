@@ -71,5 +71,5 @@ jobs:
       with:
         token: ${{ secrets.API_SECRET }}
         repository: ${{ github.repository }}
-        retain_days: 7
+        retain_days: 1
         keep_minimum_runs: 10
