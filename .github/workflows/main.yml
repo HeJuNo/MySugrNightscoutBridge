@@ -18,7 +18,7 @@ jobs:
         repository: ${{ github.repository }}
         retain_days: 1
         keep_minimum_runs: 10
-        
+
     - name: Get MySugr Token
       id: mysugr-token
       uses: luetgendorf/http-request-action@v1
@@ -74,3 +74,12 @@ jobs:
         bearerToken: '${{ secrets.API_SECRET }}'
         customHeaders: '{"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}'
         data: '{"name":"${{secrets.API_VARIABLE_NAME}}","value":${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}}'
+
+  keepalive-job:
+    name: Keepalive Workflow
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
