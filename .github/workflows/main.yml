@@ -27,6 +27,7 @@ jobs:
         url: 'https://eu-prod-api.mysugr.com/rest/v2/logentries'
         retry: 3
         retryWait: 5000
+        timeout: 30000
         method: 'GET'
         contentType: "application/json"
         username: 'x'
@@ -48,6 +49,9 @@ jobs:
       uses: luetgendorf/http-request-action@v1
       with:
         url: 'https://${{ secrets.NIGHTSCOUT_HOST }}/api/v1/treatments?token=${{ secrets.NIGHTSCOUT_TOKEN }}'
+        retry: 3
+        retryWait: 5000
+        timeout: 30000
         method: 'POST'
         contentType: "application/json"
         data: ${{ steps.mysugr-entries-to-nightscout.outputs.output }}
