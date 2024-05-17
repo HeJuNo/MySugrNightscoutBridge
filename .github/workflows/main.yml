@@ -11,15 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Delete workflow runs
-      id: delete-workflow-runs
-      uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.API_SECRET }}
-      with:
-          repository: ${{github.repository}}
-          older-than-seconds: 21600
-
     - name: Get MySugr Token
       id: mysugr-token
       uses: fjogeleit/http-request-action@v1
@@ -70,3 +61,11 @@ jobs:
         bearerToken: '${{ secrets.API_SECRET }}'
         customHeaders: '{"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}'
         data: '{"name":"${{secrets.API_VARIABLE_NAME}}","value":${{ toJSON(fromJson(steps.mysugr-entries.outputs.headers).last-modified)}}}'
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.API_SECRET }}
+        repository: ${{ github.repository }}
+        retain_days: 7
+        keep_minimum_runs: 10
