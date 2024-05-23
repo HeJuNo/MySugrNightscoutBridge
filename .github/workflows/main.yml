@@ -8,7 +8,7 @@ on:
 
 jobs:
   get-mysugr-data:
-    runs-on: [self-hosted, ubuntu-latest]
+    runs-on: [self-hosted, Linux]
     
     steps:
     - name: Delete workflow runs
