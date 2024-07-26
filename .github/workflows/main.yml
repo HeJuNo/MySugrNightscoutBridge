@@ -38,6 +38,7 @@ jobs:
         retryWait: 5000
         timeout: 30000
         preventFailureOnNoResponse: true
+        ignoreStatusCodes: '302'
         method: 'GET'
         contentType: "application/json"
         username: 'x'
