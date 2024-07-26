@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   schedule:     
     ## Schedule the job to run every 10th minute.
-    # - cron: '*/1 * * * *' 
+    - cron: '*/1 * * * *' 
 
 jobs:
   get-mysugr-data:
