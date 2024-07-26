@@ -1,5 +1,6 @@
 name: MySugr-to-Nightscout
-#run-name: Get MySugr Data (${{ github.ref_name }})
+run-name: Get MySugr Data (${{ github.ref_name }})
+
 on:
   workflow_dispatch:
   schedule:     
@@ -51,7 +52,7 @@ jobs:
         compact: true
         input: entries.json 
         script: |-
-          [ .logEntry | del(.[] | select( has("verifications") | not )) | del(.[] | select(.verifications[].logEntryAttribute != "bloodGlucoseMeasurement")) | .[] | {created_at: (.verifications[].date|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[0].sourceType + "-" + .verifications[0].sourceId)} ]
+          [ .logEntry | del(.[] | select( has("verifications") | not )) | del(.[] | select(.verifications[].logEntryAttribute != "bloodGlucoseMeasurement")) | .[] | {created_at: (.dateOfEntry|todateiso8601), glucose: .bloodGlucoseMeasurement|round , glucoseType: "Finger", eventType: "BG Check", units: "mg/dl", utcOffset: 0, enteredBy: (.verifications[].sourceType + "-" + .verifications[].sourceId)} ]
     
     - name: Upload Entries to Nightscout
       id: upload-entries-to-nightscout
