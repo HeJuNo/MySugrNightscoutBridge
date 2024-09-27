@@ -9,7 +9,7 @@ on:
 
 jobs:
   get-mysugr-data:
-    runs-on: ubuntu-24.02
+    runs-on: ubuntu-latest
     
     steps:
     - name: Delete workflow runs
@@ -81,7 +81,7 @@ jobs:
     name: Keepalive Workflow
     needs: get-mysugr-data
     
-    runs-on: ubuntu-24.02
+    runs-on: ubuntu-latest
     permissions:
       actions: write
     steps:
